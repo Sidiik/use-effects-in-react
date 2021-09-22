@@ -1,19 +1,37 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "./Login.module.css";
 function Login(props) {
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [isPass, setIspass] = useState(true);
+  const [isEmail, setIsEmail] = useState(true);
+  const [validForm, setValidForm] = useState(false);
+  const [btnDis, setBtnDis] = useState(true);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    pass.trim().length < 7 ? setIspass(false) : setPass(true);
-    if (email.trim().length == 0) {
+    if (
+      email.trim().length == 0 ||
+      (email.trim().length > 0) & !email.includes("@") ||
+      pass.trim().length < 6
+    ) {
+      setIsEmail(false);
+      setIspass(false);
       return;
     }
+    pass && pass.trim().length < 6 ? setIspass(false) : setIspass(true);
     props.onLogin(email, pass);
     setEmail("");
     setPass("");
   };
+  useEffect(() => {
+    setTimeout(() => {
+      (email.trim().length > 0) & !email.includes("@")
+        ? setIsEmail(false)
+        : setIsEmail(true);
+      pass && pass.trim().length < 6 ? setIspass(false) : setIspass(true);
+    }, 2000);
+  }, [email, pass]);
   return (
     <div className={styles.container}>
       <form className={styles.form} onSubmit={handleSubmit}>
@@ -27,6 +45,7 @@ function Login(props) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
+          {!isEmail && <p className={styles.error}>Email must contain @</p>}
         </div>
         <div className={styles["input-controls"]}>
           <label htmlFor="pass">Password</label>
@@ -40,7 +59,9 @@ function Login(props) {
             }}
             placeholder="password"
           />
-          {!isPass && <p className={styles.error}>Password may not be valid</p>}
+          {!isPass && (
+            <p className={styles.error}>Password must be 7 chars long</p>
+          )}
         </div>
         <div className="input-controls">
           <button className={styles.button}>Login</button>

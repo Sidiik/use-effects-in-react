@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useContext } from "react";
+import AuthContext from "../../Store/AuthContext";
 import styles from "./Home.module.css";
 
 function Home(props) {
+  const ctx = useContext(AuthContext);
   const logout = () => {
-    props.setIsLoggedIn(false);
+    props.logOutHandler();
   };
   return (
     <div className={styles.container}>
@@ -11,7 +13,7 @@ function Home(props) {
         <div className="logo">
           <h2>Typical page</h2>
         </div>
-        {props.isLoggedIn && (
+        {ctx.isLoggedIn && (
           <>
             <div className={styles.left}>
               <div className={styles.link}>
@@ -19,7 +21,7 @@ function Home(props) {
                 <p>Admin</p>
               </div>
               <div>
-                <button className={styles.button} onClick={logout}>
+                <button className={styles.button} onClick={ctx.onLogout}>
                   Logout
                 </button>
               </div>
@@ -27,7 +29,7 @@ function Home(props) {
           </>
         )}
       </header>
-      {props.isLoggedIn && (
+      {ctx.isLoggedIn && (
         <div className={styles.welcomePage}>
           <h1>Welcome back!</h1>
         </div>

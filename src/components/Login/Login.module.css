@@ -36,3 +36,10 @@ input {
 .error {
   color: rgb(255, 0, 43);
 }
+
+.invalid {
+  border-color: rgb(255, 0, 43);
+}
+.hide {
+  background-color: gray;
+}
